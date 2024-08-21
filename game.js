@@ -8,10 +8,10 @@ function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(`| Stage: ${stage} `) +
       chalk.blueBright(
-        `| player hp = ${player.hp} damege = ${player.damege} ~ ${Math.round(player.damege * player.maxDamegeMag)}`,
+        `| player hp = ${player.hp} damege = ${player.damege} ~ ${Math.round(player.damege * player.maxDamegeMag)} defense = ${player.defense}`,
       ) +
       chalk.redBright(
-        `| monster hp = ${monster.hp} damege = ${monster.damege} ~ ${Math.round(monster.damege * monster.maxDamegeMag)} |`,
+        `| monster hp = ${monster.hp} damege = ${monster.damege} ~ ${Math.round(monster.damege * monster.maxDamegeMag)} defense = ${monster.defense} |`,
       ),
   );
   console.log(chalk.magentaBright(`=====================\n`));
@@ -170,6 +170,9 @@ export async function startGame() {
     // 몬스터 hp가 0 이하가 되면 스테이지 클리어
     if (clear === 0) {
       stage++;
+      // 기본 보상
+      player.damege += 1;
+      player.defense += 1;
 
       // 클리어 보상
       // 6가지 중 한가지 랜덤으로 선정
