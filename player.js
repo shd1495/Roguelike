@@ -13,7 +13,7 @@ export class Player {
     // 도망 확률
     this.runChance = 5;
     // 연속 공격 확률
-    this.doubleAttackChance = 20;
+    this.doubleAttackChance = 33;
     // 방어 수치
     this.Defense = 1;
   }
@@ -33,7 +33,7 @@ export class Player {
     const roll = Math.random() * 100;
     const result = [];
 
-    // 55% 확률
+    // 확률 체크
     if (roll < this.defenseChance) {
       let counter = this.minDamege + Math.round(Math.random() * (this.maxDamege - this.minDamege));
 
@@ -44,6 +44,21 @@ export class Player {
       result.push(counter);
     }
 
+    return result;
+  }
+
+  // 연속 공격
+  doubleAttack(monster) {
+    const roll = Math.random() * 100;
+    const result = [];
+
+    // 확률 체크
+    if (roll < this.doubleAttackChance) {
+      result.push(true);
+      // 공격 2번 실행
+      result.push(this.attack(monster));
+      result.push(this.attack(monster));
+    }
     return result;
   }
 
