@@ -35,7 +35,11 @@ const battle = async (stage, player, monster) => {
 
     logs.forEach((log) => console.log(log));
 
-    console.log(chalk.green(`\n1. 공격한다 2. 도망간다.(5% 확률)`));
+    console.log(
+      chalk.green(
+        `\n1. 공격한다 2. 방어한다(${player.defenseChance}% 확률) 3. 도망간다.(${player.runChance}% 확률)`,
+      ),
+    );
     // 몬스터의 공격
     const maResult = monster.attack(player, stage);
 
@@ -56,6 +60,23 @@ const battle = async (stage, player, monster) => {
         break;
 
       case '2':
+        // 방어 메소드
+        const defResult = player.counter(monster);
+        if (defResult[0]) {
+          player.hp += maResult;
+          logs.push(chalk.gray(`[${turnCnt}] 방어에 성공했습니다!`));
+          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${defResult[1]}의 피해를 입혔습니다.`));
+        } else {
+          logs.push(chalk.yellow(`[${turnCnt}] 방어에 실패했습니다!`));
+          logs.push(
+            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
+          );
+        }
+        // 턴 카운트
+        turnCnt++;
+        break;
+
+      case '3':
         if (player.run()) {
           logs.push(chalk.green(`[${turnCnt}] 도망에 성공했습니다!`));
           monster.hp = 0;
@@ -92,11 +113,13 @@ const battle = async (stage, player, monster) => {
         return 0;
       }
 
-      if (monster.hp <= 0) {
+      // 스테이지 클리어
+      if (monster.hp <= 0 && player.hp > 0) {
         readlineSync.question('스테이지 클리어! 아무키나 입력해주세요');
         // 몬스터 처치
         aliveMonster = 0;
         return aliveMonster;
+        // 게임 오버
       } else {
         readlineSync.question('체력을 모두 소진했습니다. GAME OVER');
         // 플레이어 사망
@@ -124,6 +147,30 @@ export async function startGame() {
     // 몬스터 hp가 0 이하가 되면 스테이지 클리어
     if (clear === 0) {
       stage++;
+
+      let rn = Math.floor(Math.random() * (Object.keys(player).length - 1));
+
+      const stat = Object.keys(player)[rn];
+
+      switch (rn) {
+        // 체력
+        case 0:
+          // 20 ~ 50
+          player[stat] += 20 + Math.round(Math.random() * 31);
+          break;
+        // 최소 공격력
+        case 1:
+          // 5 ~ 20
+          player[stat] += 5 + Math.round(Math.random() * 16);
+          break;
+        // 최대 공격력 배율
+        case 1:
+          // 0.1 ~ 1
+          player[stat] += Math.ceil(Math.random() * 100) / 100;
+          break;
+      }
+
+      player[stat];
     }
   }
 }
