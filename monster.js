@@ -1,13 +1,19 @@
 export class Monster {
   constructor(stage) {
-    this.hp = stage * 10 + Math.floor(2 * Math.random() * (10 * stage));
-    this.damege = stage + Math.floor(Math.random() * (5 * stage));
+    // 체력
+    this.hp = 10 * stage + Math.round(Math.random() * 5 * stage);
+    // 최소 공격력
+    this.damege = stage + Math.round(Math.random() * 3 * stage);
+    // 최대 공격력 배율
+    this.maxDamegeMag = 1 + Math.round(Math.random() * 2);
+    // 방어 수치
+    this.Defense = 1 * stage;
   }
 
-  attack(player, stage) {
-    const damegeDiviation = Math.floor(Math.random() * (5 + stage));
+  attack(player) {
+    const result =
+      this.damege + Math.round(Math.random() * (this.damege * this.maxDamegeMag - this.damege));
 
-    const result = this.damege + damegeDiviation;
     player.hp -= result;
 
     return result;

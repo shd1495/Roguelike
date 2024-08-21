@@ -1,13 +1,11 @@
 export class Player {
   constructor() {
     // 체력
-    this.hp = 100;
+    this.hp = 50 + Math.round(Math.random() * 50);
     // 최소 공격력
-    this.minDamege = 1 + Math.round(Math.random() * 5);
+    this.damege = 1 + Math.round(Math.random() * 5);
     // 최대 공격력 배율
-    this.maxDamegeMag = 1 + Math.round(Math.random() * 3);
-    // 최대 공격력
-    this.maxDamege = Math.round(this.minDamege * this.maxDamegeMag);
+    this.maxDamegeMag = 1.5 + Math.round(Math.random() * 2);
     // 방어 확률
     this.defenseChance = 55;
     // 도망 확률
@@ -20,8 +18,9 @@ export class Player {
 
   // 공격
   attack(monster) {
-    // 최소 공격력 + (최대공-최소공 차이) * 난수 == 공격력 편차
-    const result = this.minDamege + Math.round(Math.random() * (this.maxDamege - this.minDamege));
+    // 최소 공격력 + 난수 * 공격력 편차(최소공 * 최대공 배율 - 최소공)
+    const result =
+      this.damege + Math.round(Math.random() * (this.damege * this.maxDamegeMag - this.damege));
 
     monster.hp -= result;
 
@@ -35,7 +34,8 @@ export class Player {
 
     // 확률 체크
     if (roll < this.defenseChance) {
-      let counter = this.minDamege + Math.round(Math.random() * (this.maxDamege - this.minDamege));
+      let counter =
+        this.damege + Math.round(Math.random() * (this.damege * this.maxDamegeMag - this.damege));
 
       counter = Math.round(counter * 0.6);
       monster.hp -= counter;

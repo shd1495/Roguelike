@@ -8,16 +8,16 @@ function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(`| Stage: ${stage} `) +
       chalk.blueBright(
-        `| player hp = ${player.hp} damege = ${player.minDamege} ~ ${player.maxDamege}`,
+        `| player hp = ${player.hp} damege = ${player.damege} ~ ${Math.round(player.damege * player.maxDamegeMag)}`,
       ) +
       chalk.redBright(
-        `| monster hp = ${monster.hp} damege = ${monster.damege} ~ ${monster.damege + 5 + stage} |`,
+        `| monster hp = ${monster.hp} damege = ${monster.damege} ~ ${Math.round(monster.damege * monster.maxDamegeMag)} |`,
       ),
   );
   console.log(chalk.magentaBright(`=====================\n`));
 }
 
-const battle = async (stage, player, monster) => {
+const battle = async (stage, player, monster, result, increase) => {
   let logs = [];
   let turnCnt = 1;
   let aliveMonster = 1;
@@ -25,6 +25,7 @@ const battle = async (stage, player, monster) => {
 
   // 스테이지 클리어 보상 로그
   if (stage > 1) {
+    logs.push(chalk.green(`${increase}이/가 ${result} 상승했습니다.`));
     player.hp += 50;
     logs.push(chalk.green(`체력이 50 회복되었습니다.`));
   }
@@ -154,10 +155,12 @@ export async function startGame() {
   console.clear();
   const player = new Player();
   let stage = 1;
+  let result = 0;
+  let increase = '';
 
   while (stage <= 10) {
     const monster = new Monster(stage);
-    const clear = await battle(stage, player, monster);
+    const clear = await battle(stage, player, monster, result, increase);
 
     // 스테이지 클리어 및 게임 종료 조건
     // 게임 종료
@@ -168,25 +171,63 @@ export async function startGame() {
     if (clear === 0) {
       stage++;
 
+      // 클리어 보상
+      // 6가지 중 한가지 랜덤으로 선정
       let rn = Math.floor(Math.random() * (Object.keys(player).length - 1));
 
+      // player 인스턴스에 키 배열의 인덱스 키 이름 구하기
       const stat = Object.keys(player)[rn];
 
+      // 클리어 보상 랜덤 로직 시행
       switch (rn) {
         // 체력
         case 0:
           // 20 ~ 50
-          player[stat] += 20 + Math.round(Math.random() * 31);
+          increase = '체력';
+          result = 20 + Math.round(Math.random() * 31);
+          player[stat] += result;
           break;
         // 최소 공격력
         case 1:
           // 5 ~ 20
-          player[stat] += 5 + Math.round(Math.random() * 16);
+          increase = '최소 공격력';
+          result = 5 + Math.round(Math.random() * 16);
+          player[stat] += result;
           break;
         // 최대 공격력 배율
         case 2:
           // 0.1 ~ 1
-          player[stat] += Math.ceil(Math.random() * 100) / 100;
+          increase = '최대 공격력 배율';
+          result = Math.ceil(Math.random() * 100) / 100;
+          player[stat] += result;
+          break;
+        // 방어 확률
+        case 3:
+          // 3 ~ 10
+          increase = '방어 확률';
+          result = 3 + Math.round(Math.random() * 7);
+          player[stat] += result;
+          break;
+        // 도망 확률
+        case 4:
+          // 1 ~ 3
+          increase = '도망 확률';
+          result = 1 + Math.round(Math.random() * 2);
+          player[stat] += result;
+          break;
+        // 연속 공격 확률
+        case 5:
+          // 3 ~ 7
+          increase = '연속 공격 확률';
+          result = 3 + Math.round(Math.random() * 4);
+          player[stat] += result;
+          break;
+        // 방어 수치
+        case 6:
+          // 1 ~ 3
+          increase = '방어 수치';
+          result = 1 + Math.round(Math.random() * 2);
+          player[stat] += result;
           break;
       }
     }
