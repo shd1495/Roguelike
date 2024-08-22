@@ -9,10 +9,14 @@ function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(`| Stage: ${stage} \n`) +
       chalk.blueBright(
-        `| player 체력 = ${player.hp} 공격력 = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)} 방어력 = ${player.defense} 치명타 확률 = ${player.criticalChance}  최대 공격력 배율 = ${player.maxDamageMag} |`,
+        `| player  체력 = ${player.hp} 공격력 = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)}`,
+        ` 방어력 = ${player.defense} 치명타 확률 = ${player.criticalChance}`,
+        ` 최대 공격력 배율 = ${player.maxDamageMag} |`,
       ) +
       chalk.redBright(
-        `\n| monster 체력 = ${monster.hp} 공격력 = ${monster.damage} ~ ${Math.round(monster.damage * monster.maxDamageMag)} 방어력 = ${monster.defense} 치명타 확률 = ${monster.criticalChance} 최대 공격력 배율 = ${monster.maxDamageMag} |`,
+        `\n| monster 체력 = ${monster.hp} 공격력 = ${monster.damage} ~ ${Math.round(monster.damage * monster.maxDamageMag)}`,
+        ` 방어력 = ${monster.defense} 치명타 확률 = ${monster.criticalChance}`,
+        ` 최대 공격력 배율 = ${monster.maxDamageMag} |`,
       ),
   );
   console.log(chalk.magentaBright(`=====================\n`));
