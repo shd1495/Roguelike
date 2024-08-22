@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import readlineSync from 'readline-sync';
 import { Player } from './player.js';
 import { Monster } from './monster.js';
+import { Item } from './item.js';
 
 function displayStatus(stage, player, monster) {
   console.log(chalk.magentaBright(`\n=== Current Status ===`));
@@ -159,15 +160,20 @@ const battle = async (stage, player, monster) => {
 
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
-        const name = `리치왕의 분노`;
-        const stats = Math.floor(Math.random() * 3);
-        const itemStats = {};
+        // 20% 확률로 아이템 드랍
+        if (Math.random() * 100 < 100) {
+          const name = `리치왕의 분노`;
+          const stats = Math.floor(Math.random() * 3);
+          const itemStats = {};
 
-        if (stats === 0) itemStats.damage = Math.ceil(Math.random() * 5);
-        if (stats === 1) itemStats.defense = Math.ceil(Math.random() * 5);
-        if (stats === 2) itemStats.criticalChance = Math.ceil(Math.random() * 20);
+          if (stats === 0) itemStats.damage = Math.ceil(Math.random() * 5);
+          if (stats === 1) itemStats.defense = Math.ceil(Math.random() * 5);
+          if (stats === 2) itemStats.criticalChance = Math.ceil(Math.random() * 20);
 
-        const item = new Item(name, itemStats);
+          const item = new Item(name, itemStats);
+          console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
+          item.equipItem(player, item);
+        }
 
         const reward = await player.reward(stage);
         console.log(
