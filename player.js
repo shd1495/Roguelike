@@ -13,7 +13,7 @@ export class Player {
     // 연속 공격 확률
     this.doubleAttackChance = 33;
     // 방어 수치
-    this.defense = 1;
+    this.defense = 0;
     // 치명타 확률
     this.criticalChance = 10;
     // 치명타 배율
@@ -35,7 +35,7 @@ export class Player {
   reward(stage) {
     // 기본 보상
     this.damage += Math.round(stage / 2);
-    this.defense += Math.round(stage / 2);
+    this.defense += Math.floor(stage / 2);
 
     // 랜덤 추가 보상
     const rewardTable = this.rewardTable[Math.floor(Math.random() * this.rewardTable.length)];
@@ -44,13 +44,13 @@ export class Player {
       // 체력
       case 'hp':
         // 20 ~ 50
-        const hp = 20 + Math.round(Math.random() * 31);
+        const hp = 20 + Math.round(Math.random() * 30);
         this.hp += hp;
         return { type: '체력', amount: hp };
       // 최소 공격력
       case 'damage':
-        // 5 ~ 20
-        const damage = 5 + Math.round(Math.random() * 16);
+        // 1 ~ 10
+        const damage = 1 + Math.round(Math.random() * 10);
         this.damage += damage;
         return { type: '최소 공격력', amount: damage };
       // 최대 공격력 배율

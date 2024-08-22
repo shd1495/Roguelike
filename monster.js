@@ -1,13 +1,13 @@
 export class Monster {
   constructor(stage) {
     // 체력
-    this.hp = 15 * stage + Math.round(Math.random() * 5 * stage);
+    this.hp = 15 * stage + Math.round(Math.random() * 10 * stage);
     // 최소 공격력
-    this.damage = stage + Math.round(Math.random() * 3 * stage);
+    this.damage = stage + Math.round(Math.random() * 4 * stage);
     // 최대 공격력 배율
     this.maxDamageMag = 1 + Math.round(Math.random() * 2);
     // 방어 수치
-    this.defense = Math.round(stage / 2);
+    this.defense = Math.floor(stage / 2);
     // 치명타 확률
     this.criticalChance = 10;
     // 치명타 배율
