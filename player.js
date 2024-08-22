@@ -24,7 +24,7 @@ export class Player {
       'damage',
       'maxDamageMag',
       'counterChance',
-      'runChace',
+      'runChance',
       'doubleAttackChance',
       'defense',
       'criticalChance',
