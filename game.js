@@ -55,7 +55,9 @@ const battle = async (stage, player, monster) => {
 
     console.log(
       chalk.green(
-        `\n1. 공격한다 2. 연속 공격 (${player.doubleAttackChance}% 확률) 3. 방어한다(${player.counterChance}% 확률) 4. 도망간다.(${player.runChance}% 확률) 5. 회복하기(1 ~ ${stage * 5})`,
+        `\n1. 공격한다 2. 연속 공격 (${player.doubleAttackChance}% 확률)`,
+        `3. 방어한다(${player.counterChance}% 확률) 4. 도망간다.(${player.runChance}% 확률)`,
+        ` 5. 회복하기(1 ~ ${stage * 5})`,
       ),
     );
     // 몬스터의 공격
