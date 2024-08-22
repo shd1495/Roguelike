@@ -8,25 +8,42 @@ function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(`| Stage: ${stage} `) +
       chalk.blueBright(
-        `| player hp = ${player.hp} damege = ${player.damege} ~ ${Math.round(player.damege * player.maxDamegeMag)} defense = ${player.defense}`,
+        `| player hp = ${player.hp} damege = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)} defense = ${player.defense}`,
       ) +
       chalk.redBright(
-        `| monster hp = ${monster.hp} damege = ${monster.damege} ~ ${Math.round(monster.damege * monster.maxDamegeMag)} defense = ${monster.defense} |`,
+        `| monster hp = ${monster.hp} damege = ${monster.damage} ~ ${Math.round(monster.damage * monster.maxDamageMag)} defense = ${monster.defense} |`,
       ),
   );
   console.log(chalk.magentaBright(`=====================\n`));
 }
 
-const battle = async (stage, player, monster, result, increase) => {
+// 플레이어 로그
+function handlePlayerLog(turnCnt, result, logs) {
+  logs.push(
+    chalk.green(
+      `[${turnCnt}] 몬스터에게 ${result[1] ? '치명타로' : ''} ${result[0]}의 피해를 입혔습니다!`,
+    ),
+  );
+}
+
+// 몬스터 로그
+function handleMonsterLog(turnCnt, result, logs) {
+  logs.push(
+    chalk.red(
+      `[${turnCnt}] 플레이어가 ${result[1] ? '치명타로' : ''} ${result[0]}의 피해를 입었습니다!`,
+    ),
+  );
+}
+
+const battle = async (stage, player, monster) => {
   let logs = [];
   let turnCnt = 1;
   let aliveMonster = 1;
   let alivePlayer = true;
 
-  // 스테이지 클리어 보상 로그
+  // 스테이지 클리어 체력 회복
   if (stage > 1) {
-    logs.push(chalk.green(`${increase}이/가 ${result} 상승했습니다.`));
-    player.hp += 50;
+    player.heal(50);
     logs.push(chalk.green(`체력이 50 회복되었습니다.`));
   }
 
@@ -38,7 +55,7 @@ const battle = async (stage, player, monster, result, increase) => {
 
     console.log(
       chalk.green(
-        `\n1. 공격한다 2. 연속 공격 (${player.doubleAttackChance}% 확률) 3. 방어한다(${player.defenseChance}% 확률) 4. 도망간다.(${player.runChance}% 확률)`,
+        `\n1. 공격한다 2. 연속 공격 (${player.doubleAttackChance}% 확률) 3. 방어한다(${player.counterChance}% 확률) 4. 도망간다.(${player.runChance}% 확률) 5. 회복하기(1 ~ ${stage * 5})`,
       ),
     );
     // 몬스터의 공격
@@ -52,12 +69,9 @@ const battle = async (stage, player, monster, result, increase) => {
       case '1':
         // 공격
         const paResult = player.attack(monster);
-        logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${paResult}의 피해를 입혔습니다.`));
-        logs.push(chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`));
-        if (monster.hp <= 0) logs.push(`[${turnCnt}] 몬스터를 처치 했습니다!`);
-
-        // 턴 카운트
-        turnCnt++;
+        handlePlayerLog(turnCnt, paResult, logs);
+        // 몬스터 공격
+        handleMonsterLog(turnCnt, maResult, logs);
         break;
 
       case '2':
@@ -65,58 +79,63 @@ const battle = async (stage, player, monster, result, increase) => {
         const dafResult = player.doubleAttack(monster);
         if (dafResult[0]) {
           logs.push(chalk.gray(`[${turnCnt}] 연속 공격에 성공했습니다!`));
-          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[1]}의 피해를 입혔습니다.`));
-          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[2]}의 피해를 입혔습니다.`));
-          chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`);
+          // 공격 2회
+          handlePlayerLog(turnCnt, dafResult[1], logs);
+          handlePlayerLog(turnCnt, dafResult[2], logs);
+          // 몬스터 공격
+          handleMonsterLog(turnCnt, maResult, logs);
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 연속 공격에 실패했습니다!`));
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
-          );
+
+          // 몬스터 공격
+          handleMonsterLog(turnCnt, maResult, logs);
         }
-        // 턴 카운트
-        turnCnt++;
         break;
 
       case '3':
         // 방어
         const defResult = player.counter(monster);
+        console.log(chalk.gray(`[${turnCnt}] ${defResult}`));
         if (defResult[0]) {
-          player.hp += maResult;
+          player.heal(maResult[0]);
+
           logs.push(chalk.gray(`[${turnCnt}] 방어에 성공했습니다!`));
-          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${defResult[1]}의 피해를 입혔습니다.`));
+          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${defResult[1]}의 피해를 입혔습니다!`));
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 방어에 실패했습니다!`));
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
-          );
+
+          // 몬스터 공격
+          handleMonsterLog(turnCnt, maResult, logs);
         }
-        // 턴 카운트
-        turnCnt++;
         break;
 
       case '4':
         // 도망
         if (player.run()) {
-          player.hp += maResult;
+          player.heal(maResult[0]);
           logs.push(chalk.green(`[${turnCnt}] 도망에 성공했습니다!`));
           monster.hp = 0;
           break;
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 도망에 실패했습니다!`));
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
-          );
-          // 턴 카운트
-          turnCnt++;
+
+          // 몬스터 공격
+          handleMonsterLog(turnCnt, maResult, logs);
           break;
         }
-
+      case '5':
+        // 회복
+        const healAmount = player.heal(1 + Math.floor(Math.random() * (5 * stage)));
+        logs.push(chalk.yellow(`[${turnCnt}] ${healAmount}만큼 회복에 성공했습니다!`));
+        // 몬스터 공격
+        handleMonsterLog(turnCnt, maResult, logs);
+        break;
       default:
         logs.push(chalk.red('올바른 선택을 입력해주세요'));
         break;
     }
-    // 스테이지 클리어 조건 및 게임 클리어 조건
+
+    // 스테이지 클리어 조건 및 게임 종료 조건
     if (monster.hp <= 0 || player.hp <= 0) {
       console.clear();
 
@@ -133,9 +152,15 @@ const battle = async (stage, player, monster, result, increase) => {
         readlineSync.question('게임 클리어를 축하드립니다.');
         return 0;
       }
+      // 턴 카운트
+      turnCnt++;
 
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
+        const reward = await player.reward(stage);
+        console.log(
+          chalk.green(`클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`),
+        );
         readlineSync.question('스테이지 클리어! 아무키나 입력해주세요');
         // 몬스터 처치
         aliveMonster = 0;
@@ -163,76 +188,13 @@ export async function startGame() {
     const clear = await battle(stage, player, monster, result, increase);
 
     // 스테이지 클리어 및 게임 종료 조건
-    // 게임 종료
+    // 게임 종료 (플레이어 사망)
     if (clear === false) {
       break;
     }
     // 몬스터 hp가 0 이하가 되면 스테이지 클리어
     if (clear === 0) {
       stage++;
-      // 기본 보상
-      player.damege += 1;
-      player.defense += 1;
-
-      // 클리어 보상
-      // 6가지 중 한가지 랜덤으로 선정
-      let rn = Math.floor(Math.random() * (Object.keys(player).length - 1));
-
-      // player 인스턴스에 키 배열의 인덱스 키 이름 구하기
-      const stat = Object.keys(player)[rn];
-
-      // 클리어 보상 랜덤 로직 시행
-      switch (rn) {
-        // 체력
-        case 0:
-          // 20 ~ 50
-          increase = '체력';
-          result = 20 + Math.round(Math.random() * 31);
-          player[stat] += result;
-          break;
-        // 최소 공격력
-        case 1:
-          // 5 ~ 20
-          increase = '최소 공격력';
-          result = 5 + Math.round(Math.random() * 16);
-          player[stat] += result;
-          break;
-        // 최대 공격력 배율
-        case 2:
-          // 0.1 ~ 1
-          increase = '최대 공격력 배율';
-          result = Math.ceil(Math.random() * 100) / 100;
-          player[stat] += result;
-          break;
-        // 방어 확률
-        case 3:
-          // 3 ~ 10
-          increase = '방어 확률';
-          result = 3 + Math.round(Math.random() * 7);
-          player[stat] += result;
-          break;
-        // 도망 확률
-        case 4:
-          // 1 ~ 3
-          increase = '도망 확률';
-          result = 1 + Math.round(Math.random() * 2);
-          player[stat] += result;
-          break;
-        // 연속 공격 확률
-        case 5:
-          // 3 ~ 7
-          increase = '연속 공격 확률';
-          result = 3 + Math.round(Math.random() * 4);
-          player[stat] += result;
-          break;
-        // 방어 수치
-        case 6:
-          // 1 ~ 3
-          increase = '방어 수치';
-          result = 1 + Math.round(Math.random() * 2);
-          player[stat] += result;
-          break;
-      }
     }
   }
 }
