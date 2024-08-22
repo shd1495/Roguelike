@@ -26,7 +26,7 @@ export class Player {
       'counterChance',
       'runChace',
       'doubleAttackChance',
-      'counter',
+      'defense',
       'criticalChance',
     ];
   }
@@ -68,7 +68,6 @@ export class Player {
       // 도망 확률
       case 'runChance':
         // 1 ~ 3
-        increase = '도망 확률';
         const runChance = 1 + Math.round(Math.random() * 2);
         this.runChance += runChance;
         return { type: '도망 확률', amount: runChance };
@@ -117,6 +116,7 @@ export class Player {
 
   heal(amount) {
     this.hp += amount;
+    return amount;
   }
 
   // 공격
