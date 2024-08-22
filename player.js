@@ -29,8 +29,13 @@ export class Player {
       'defense',
       'criticalChance',
     ];
+    // 아이템
+    this.item = null;
   }
 
+  equipItem(item) {
+    this.item = item;
+  }
   // 스테이지 클리어 보상
   reward(stage) {
     // 기본 보상

@@ -159,6 +159,16 @@ const battle = async (stage, player, monster) => {
 
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
+        const name = `리치왕의 분노`;
+        const stats = Math.floor(Math.random() * 3);
+        const itemStats = {};
+
+        if (stats === 0) itemStats.damage = Math.ceil(Math.random() * 5);
+        if (stats === 1) itemStats.defense = Math.ceil(Math.random() * 5);
+        if (stats === 2) itemStats.criticalChance = Math.ceil(Math.random() * 20);
+
+        const item = new Item(name, itemStats);
+
         const reward = await player.reward(stage);
         console.log(
           chalk.green(`클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`),
