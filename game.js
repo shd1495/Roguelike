@@ -167,6 +167,7 @@ const battle = async (stage, player, monster) => {
           item.equipItem(player, item);
         }
 
+        // 클리어 보상
         const reward = await player.reward(stage);
         console.log(
           chalk.green(`클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`),
