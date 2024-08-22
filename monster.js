@@ -15,14 +15,20 @@ export class Monster {
   }
 
   // 공격력 계산
-  calculDamage(player) {
+  calculDamage() {
     let damage =
       // 최소 공격력 + 난수 * 공격력 편차(최소공 * 최대공 배율 - 최소공)
-      this.damage +
-      Math.round(Math.random() * (this.damage * this.maxDamageMag - this.damage)) -
-      player.defense;
+      this.damage + Math.round(Math.random() * (this.damage * this.maxDamageMag - this.damage));
 
     return damage > 0 ? damage : 0;
+  }
+
+  // 입은 피해 계산
+  takeDamage(damage) {
+    // 대미지가 0보다 낮을경우 0 = 최소 피해량
+    const receivedDamage = Math.max(damage - this.defense, 0);
+    this.hp -= receivedDamage;
+    return receivedDamage;
   }
 
   // 크리티컬 확률 계산
@@ -30,20 +36,16 @@ export class Monster {
     return Math.random() * 100 < this.criticalChance;
   }
 
+  // 공격
   attack(player) {
-    const result = [];
-    const isCri = this.isCri();
     let damage = this.calculDamage(player);
+    const isCri = this.isCri();
 
-    if (damage > 0 && isCri) {
-      damage *= this.criticalMag;
-    }
+    // 치명타 시 데미지 * 치명타 배율
+    if (isCri) damage *= this.criticalMag;
 
-    player.hp -= damage;
+    damage = player.takeDamage(damage, isCri);
 
-    result.push(damage);
-    result.push(isCri);
-
-    return result;
+    return [damage, isCri];
   }
 }

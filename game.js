@@ -52,31 +52,17 @@ const battle = async (stage, player, monster, result, increase) => {
       case '1':
         // 공격
         const paResult = player.attack(monster);
-        // 치명타 여부
-        if (paResult[1]) {
-          logs.push(
-            chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${paResult[0]}의 피해를 입혔습니다!`),
-          );
-        } else {
-          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${paResult[0]}의 피해를 입혔습니다.`));
-        }
-
-        // 몬스터 치명타 여부
-        if (maResult[1]) {
-          logs.push(
-            chalk.red(
-              `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
-            ),
-          );
-        } else {
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
-          );
-        }
-        if (monster.hp <= 0) logs.push(`[${turnCnt}] 몬스터를 처치 했습니다!`);
-
-        // 턴 카운트
-        turnCnt++;
+        logs.push(
+          chalk.green(
+            `[${turnCnt}] 몬스터에게 ${paResult[1] ? '치명타로' : ''} ${paResult[0]}의 피해를 입혔습니다!`,
+          ),
+        );
+        // 몬스터 공격
+        logs.push(
+          chalk.red(
+            `[${turnCnt}] 플레이어가 ${maResult[1] ? '치명타로' : ''} ${maResult[0]}의 피해를 입었습니다!`,
+          ),
+        );
         break;
 
       case '2':
@@ -85,53 +71,34 @@ const battle = async (stage, player, monster, result, increase) => {
         if (dafResult[0]) {
           logs.push(chalk.gray(`[${turnCnt}] 연속 공격에 성공했습니다!`));
 
-          // 치명타 여부
-          if (dafResult[1][0]) {
-            logs.push(
-              chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${dafResult[1]}의 피해를 입혔습니다!`),
-            );
-          } else {
-            logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[1]}의 피해를 입혔습니다.`));
-          }
+          // 공격 2회
+          logs.push(
+            chalk.green(
+              `[${turnCnt}] 몬스터에게 ${dafResult[1][1] ? '치명타로' : ''} ${dafResult[1][0]}의 피해를 입혔습니다!`,
+            ),
+          );
+          logs.push(
+            chalk.green(
+              `[${turnCnt}] 몬스터에게 ${dafResult[2][1] ? '치명타로' : ''} ${dafResult[2][0]}의 피해를 입혔습니다!`,
+            ),
+          );
 
-          // 치명타 여부
-          if (dafResult[2][0]) {
-            logs.push(
-              chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${dafResult[2]}의 피해를 입혔습니다!`),
-            );
-          } else {
-            logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[2]}의 피해를 입혔습니다.`));
-          }
-          // 몬스터 치명타 여부
-          if (maResult[1]) {
-            logs.push(
-              chalk.red(
-                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
-              ),
-            );
-          } else {
-            logs.push(
-              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
-            );
-          }
+          // 몬스터 공격
+          logs.push(
+            chalk.red(
+              `[${turnCnt}] 플레이어가 ${maResult[1] ? '치명타로' : ''} ${maResult[0]}의 피해를 입었습니다!`,
+            ),
+          );
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 연속 공격에 실패했습니다!`));
 
-          // 몬스터 치명타 여부
-          if (maResult[1]) {
-            logs.push(
-              chalk.red(
-                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
-              ),
-            );
-          } else {
-            logs.push(
-              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
-            );
-          }
+          // 몬스터 공격
+          logs.push(
+            chalk.red(
+              `[${turnCnt}] 플레이어가 ${maResult[1] ? '치명타로' : ''} ${maResult[0]}의 피해를 입었습니다!`,
+            ),
+          );
         }
-        // 턴 카운트
-        turnCnt++;
         break;
 
       case '3':
@@ -139,33 +106,19 @@ const battle = async (stage, player, monster, result, increase) => {
         const defResult = player.counter(monster);
         if (defResult[0]) {
           player.hp += maResult;
+
           logs.push(chalk.gray(`[${turnCnt}] 방어에 성공했습니다!`));
-          // 치명타 여부
-          if (defResult[1]) {
-            logs.push(
-              chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${defResult[3]}의 피해를 입혔습니다!`),
-            );
-          } else {
-            logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${defResult[3]}의 피해를 입혔습니다.`));
-          }
+          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${defResult[1]}의 피해를 입혔습니다!`));
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 방어에 실패했습니다!`));
 
-          // 몬스터 치명타 여부
-          if (maResult[1]) {
-            logs.push(
-              chalk.red(
-                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
-              ),
-            );
-          } else {
-            logs.push(
-              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
-            );
-          }
+          // 몬스터 공격
+          logs.push(
+            chalk.red(
+              `[${turnCnt}] 플레이어가 ${maResult[1] ? '치명타로' : ''} ${maResult[0]}의 피해를 입었습니다!`,
+            ),
+          );
         }
-        // 턴 카운트
-        turnCnt++;
         break;
 
       case '4':
@@ -178,20 +131,12 @@ const battle = async (stage, player, monster, result, increase) => {
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 도망에 실패했습니다!`));
 
-          // 몬스터 치명타 여부
-          if (maResult[1]) {
-            logs.push(
-              chalk.red(
-                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
-              ),
-            );
-          } else {
-            logs.push(
-              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
-            );
-          }
-          // 턴 카운트
-          turnCnt++;
+          // 몬스터 공격
+          logs.push(
+            chalk.red(
+              `[${turnCnt}] 플레이어가 ${maResult[1] ? '치명타로' : ''} ${maResult[0]}의 피해를 입었습니다!`,
+            ),
+          );
           break;
         }
 
@@ -199,6 +144,9 @@ const battle = async (stage, player, monster, result, increase) => {
         logs.push(chalk.red('올바른 선택을 입력해주세요'));
         break;
     }
+    // 턴 카운트
+    turnCnt++;
+
     // 스테이지 클리어 조건 및 게임 클리어 조건
     if (monster.hp <= 0 || player.hp <= 0) {
       console.clear();
@@ -254,7 +202,7 @@ export async function startGame() {
     if (clear === 0) {
       stage++;
       // 기본 보상
-      player.damege += 1;
+      player.damage += 1;
       player.defense += 1;
 
       // 클리어 보상

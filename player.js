@@ -21,12 +21,10 @@ export class Player {
   }
 
   // 공격력 계산
-  calculDamage(monster, counter = false) {
+  calculDamage(counter = false) {
     let damage =
       // 최소 공격력 + 난수 * 공격력 편차(최소공 * 최대공 배율 - 최소공)
-      this.damage +
-      Math.round(Math.random() * (this.damage * this.maxDamageMag - this.damage)) -
-      monster.defense;
+      this.damage + Math.round(Math.random() * (this.damage * this.maxDamageMag - this.damage));
 
     // 반격 대미지 계산
     if (counter) damage = Math.round(damage * 0.6);
@@ -39,53 +37,47 @@ export class Player {
     return Math.random() * 100 < this.criticalChance;
   }
 
+  // 입은 피해 계산
+  takeDamage(damage) {
+    // 대미지가 0보다 낮을경우 0 = 최소 피해량
+    const receivedDamage = Math.max(damage - this.defense, 0);
+    this.hp -= receivedDamage;
+    return receivedDamage;
+  }
+
   // 공격
   attack(monster) {
-    const result = [];
     let damage = this.calculDamage(monster);
     const isCri = this.isCri();
 
-    if (damage > 0 && isCri) {
-      damage *= this.criticalMag;
-    }
+    // 치명타 시 데미지 * 치명타 배율
+    if (isCri) damage *= this.criticalMag;
 
-    monster.hp -= damage;
+    damage = monster.takeDamage(damage, isCri);
 
-    result.push(damage);
-    result.push(isCri);
-
-    return result;
+    return [damage, isCri];
   }
 
-  // 방어
+  // 방어/반격
   counter(monster) {
-    const roll = Math.random() * 100;
-    const result = [];
-
+    const roll = Math.random() * 100 < this.defenseChance;
     // 확률 체크
-    if (roll < this.defenseChance) {
+    if (roll) {
       let counter = this.calculDamage(monster, true);
       const isCri = this.isCri();
-
-      if (counter > 0 && isCri) counter *= this.criticalMag;
-
-      monster.hp -= counter;
-
-      result.push(true);
-      result.push(isCri);
-      result.push(counter);
+      counter = monster.takeDamage(counter, isCri);
+      return [roll, counter];
     }
 
-    return result;
+    return [roll, 0];
   }
 
   // 연속 공격
   doubleAttack(monster) {
-    const roll = Math.random() * 100;
     const result = [];
 
     // 확률 체크
-    if (roll < this.doubleAttackChance) {
+    if (Math.random() * 100 < this.doubleAttackChance) {
       result.push(true);
       // 공격 2번 실행
       result.push(this.attack(monster));
