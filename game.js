@@ -7,12 +7,12 @@ import { Item } from './item.js';
 function displayStatus(stage, player, monster) {
   console.log(chalk.magentaBright(`\n=== Current Status ===`));
   console.log(
-    chalk.cyanBright(`| Stage: ${stage} `) +
+    chalk.cyanBright(`| Stage: ${stage} \n`) +
       chalk.blueBright(
-        `| player hp = ${player.hp} damege = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)} defense = ${player.defense}`,
+        `| player 체력 = ${player.hp} 공격력 = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)} 방어력 = ${player.defense} 치명타 확률 = ${player.criticalChance}  최대 공격력 배율 = ${player.maxDamageMag} |`,
       ) +
       chalk.redBright(
-        `| monster hp = ${monster.hp} damege = ${monster.damage} ~ ${Math.round(monster.damage * monster.maxDamageMag)} defense = ${monster.defense} |`,
+        `\n| monster 체력 = ${monster.hp} 공격력 = ${monster.damage} ~ ${Math.round(monster.damage * monster.maxDamageMag)} 방어력 = ${monster.defense} 치명타 확률 = ${monster.criticalChance} 최대 공격력 배율 = ${monster.maxDamageMag} |`,
       ),
   );
   console.log(chalk.magentaBright(`=====================\n`));
@@ -160,7 +160,7 @@ const battle = async (stage, player, monster) => {
 
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
-        // 20% 확률로 아이템 드랍
+        // 2 ~ 20% 확률로 아이템 드랍
         if (Math.random() * 100 < 2 * stage) {
           const item = Item.dropItem();
           console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
