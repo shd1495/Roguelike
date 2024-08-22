@@ -8,10 +8,10 @@ function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(`| Stage: ${stage} `) +
       chalk.blueBright(
-        `| player hp = ${player.hp} damege = ${player.damege} ~ ${Math.round(player.damege * player.maxDamegeMag)} defense = ${player.defense}`,
+        `| player hp = ${player.hp} damege = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)} defense = ${player.defense}`,
       ) +
       chalk.redBright(
-        `| monster hp = ${monster.hp} damege = ${monster.damege} ~ ${Math.round(monster.damege * monster.maxDamegeMag)} defense = ${monster.defense} |`,
+        `| monster hp = ${monster.hp} damege = ${monster.damage} ~ ${Math.round(monster.damage * monster.maxDamageMag)} defense = ${monster.defense} |`,
       ),
   );
   console.log(chalk.magentaBright(`=====================\n`));
@@ -52,8 +52,27 @@ const battle = async (stage, player, monster, result, increase) => {
       case '1':
         // 공격
         const paResult = player.attack(monster);
-        logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${paResult}의 피해를 입혔습니다.`));
-        logs.push(chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`));
+        // 치명타 여부
+        if (paResult[1]) {
+          logs.push(
+            chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${paResult[0]}의 피해를 입혔습니다!`),
+          );
+        } else {
+          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${paResult[0]}의 피해를 입혔습니다.`));
+        }
+
+        // 몬스터 치명타 여부
+        if (maResult[1]) {
+          logs.push(
+            chalk.red(
+              `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
+            ),
+          );
+        } else {
+          logs.push(
+            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
+          );
+        }
         if (monster.hp <= 0) logs.push(`[${turnCnt}] 몬스터를 처치 했습니다!`);
 
         // 턴 카운트
@@ -65,16 +84,51 @@ const battle = async (stage, player, monster, result, increase) => {
         const dafResult = player.doubleAttack(monster);
         if (dafResult[0]) {
           logs.push(chalk.gray(`[${turnCnt}] 연속 공격에 성공했습니다!`));
-          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[1]}의 피해를 입혔습니다.`));
-          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[2]}의 피해를 입혔습니다.`));
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
-          );
+
+          // 치명타 여부
+          if (dafResult[1][0]) {
+            logs.push(
+              chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${dafResult[1]}의 피해를 입혔습니다!`),
+            );
+          } else {
+            logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[1]}의 피해를 입혔습니다.`));
+          }
+
+          // 치명타 여부
+          if (dafResult[2][0]) {
+            logs.push(
+              chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${dafResult[2]}의 피해를 입혔습니다!`),
+            );
+          } else {
+            logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[2]}의 피해를 입혔습니다.`));
+          }
+          // 몬스터 치명타 여부
+          if (maResult[1]) {
+            logs.push(
+              chalk.red(
+                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
+              ),
+            );
+          } else {
+            logs.push(
+              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
+            );
+          }
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 연속 공격에 실패했습니다!`));
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
-          );
+
+          // 몬스터 치명타 여부
+          if (maResult[1]) {
+            logs.push(
+              chalk.red(
+                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
+              ),
+            );
+          } else {
+            logs.push(
+              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
+            );
+          }
         }
         // 턴 카운트
         turnCnt++;
@@ -86,12 +140,29 @@ const battle = async (stage, player, monster, result, increase) => {
         if (defResult[0]) {
           player.hp += maResult;
           logs.push(chalk.gray(`[${turnCnt}] 방어에 성공했습니다!`));
-          logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${defResult[1]}의 피해를 입혔습니다.`));
+          // 치명타 여부
+          if (defResult[1]) {
+            logs.push(
+              chalk.green(`[${turnCnt}] 몬스터에게 치명타로 ${defResult[3]}의 피해를 입혔습니다!`),
+            );
+          } else {
+            logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${defResult[3]}의 피해를 입혔습니다.`));
+          }
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 방어에 실패했습니다!`));
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
-          );
+
+          // 몬스터 치명타 여부
+          if (maResult[1]) {
+            logs.push(
+              chalk.red(
+                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
+              ),
+            );
+          } else {
+            logs.push(
+              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
+            );
+          }
         }
         // 턴 카운트
         turnCnt++;
@@ -106,9 +177,19 @@ const battle = async (stage, player, monster, result, increase) => {
           break;
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 도망에 실패했습니다!`));
-          logs.push(
-            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
-          );
+
+          // 몬스터 치명타 여부
+          if (maResult[1]) {
+            logs.push(
+              chalk.red(
+                `[${turnCnt}] 플레이어가 몬스터에게 치명타로 ${maResult[0]}의 피해를 입었습니다.`,
+              ),
+            );
+          } else {
+            logs.push(
+              chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult[0]}의 피해를 입었습니다.`),
+            );
+          }
           // 턴 카운트
           turnCnt++;
           break;
@@ -232,6 +313,13 @@ export async function startGame() {
           // 1 ~ 3
           increase = '방어 수치';
           result = 1 + Math.round(Math.random() * 2);
+          player[stat] += result;
+          break;
+        // 치명타 확률
+        case 7:
+          // 3 ~ 7
+          increase = '치명타 확률';
+          result = 3 + Math.round(Math.random() * 4);
           player[stat] += result;
           break;
       }
