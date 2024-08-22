@@ -67,7 +67,9 @@ const battle = async (stage, player, monster, result, increase) => {
           logs.push(chalk.gray(`[${turnCnt}] 연속 공격에 성공했습니다!`));
           logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[1]}의 피해를 입혔습니다.`));
           logs.push(chalk.green(`[${turnCnt}] 몬스터에게 ${dafResult[2]}의 피해를 입혔습니다.`));
-          chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`);
+          logs.push(
+            chalk.red(`[${turnCnt}] 플레이어가 몬스터에게 ${maResult}의 피해를 입었습니다.`),
+          );
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 연속 공격에 실패했습니다!`));
           logs.push(
