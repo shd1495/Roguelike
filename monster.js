@@ -7,7 +7,7 @@ export class Monster {
     // 최대 공격력 배율
     this.maxDamageMag = 1 + Math.round(Math.random() * 2);
     // 방어 수치
-    this.defense = stage;
+    this.defense = Math.round(stage / 2);
     // 치명타 확률
     this.criticalChance = 10;
     // 치명타 배율
