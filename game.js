@@ -17,6 +17,7 @@ function displayStatus(stage, player, monster) {
   console.log(chalk.magentaBright(`=====================\n`));
 }
 
+// 플레이어 로그
 function handlePlayerLog(turnCnt, result, logs) {
   logs.push(
     chalk.green(
@@ -25,6 +26,7 @@ function handlePlayerLog(turnCnt, result, logs) {
   );
 }
 
+// 몬스터 로그
 function handleMonsterLog(turnCnt, result, logs) {
   logs.push(
     chalk.red(
