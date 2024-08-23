@@ -4,7 +4,11 @@ import chalk from 'chalk';
 export function displayStatus(stage, player, monster) {
   console.log(chalk.magentaBright(`\n=== Current Status ===`));
   console.log(
-    chalk.cyanBright(`| Stage: ${stage} | ${player.item ? player.item.name : ''}  \n`) +
+    chalk.cyanBright(
+      `| Stage: ${stage} | ${player.item ? player.item.name + ` =` : ''}`,
+      `${player.item ? Object.keys(player.item.stat) + ` +` : ''}`,
+      `${player.item ? Object.values(player.item.stat) : ''} \n`,
+    ) +
       chalk.blueBright(
         `| player  체력 = ${player.hp} 공격력 = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)}`,
         ` 방어력 = ${player.defense} 치명타 확률 = ${player.criticalChance}`,
