@@ -144,7 +144,7 @@ const battle = async (stage, player, monster) => {
           let choice;
           do {
             choice = readlineSync.question(
-              `1. ${player.item ? '교체한다' : '장착한다'}. 2. 장착하지 않는다.`,
+              ` ${player.item ? '1. 교체한다.' + '2. 교체하지 않는다.' : '1. 장착한다.' + '2. 장착하지 않는다.'} `,
             );
 
             switch (choice) {

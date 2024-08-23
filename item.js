@@ -4,8 +4,12 @@ export class Item {
     this.stat = stat;
   }
 
-  // item 드랍 메소드
   // 인스턴스화하기 전에 사용하는 정적 메소드
+  /**
+   * 아이템 드랍
+   * @returns {object}
+   * @author 아이템 드랍 시 데미지, 방어, 크리티컬 배율 중 하나의 값을 가짐
+   */
   static dropItem() {
     const name = `전설적인 무기`;
     const stats = Math.floor(Math.random() * 3);
@@ -19,7 +23,11 @@ export class Item {
     return item;
   }
 
-  // item 장착 메소드 = player 객체에 능력치 추가
+  /**
+   * 아이템 장착 메소드
+   * @param {object} player
+   * @param {object} item
+   */
   equipItem(player, item) {
     player.item = item;
     if (item.stat.damage) player.damage += item.stat.damage;
@@ -29,7 +37,10 @@ export class Item {
     if (item.stat.criticalChance) player.criticalChance += item.stat.criticalChance;
   }
 
-  // 아이템 교체 메소드
+  /**
+   * 아이템 교체 메소드
+   * @param {object} player
+   */
   unEquipItem(player) {
     const item = player.item;
     if (item.stat.damage) player.damage -= player.item.stat.damage;

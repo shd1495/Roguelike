@@ -1,6 +1,11 @@
 import chalk from 'chalk';
 
-// 현재 상태 창
+/**
+ * 현재 상태 창
+ * @param {number} stage
+ * @param {object} player
+ * @param {object} monster
+ */
 export function displayStatus(stage, player, monster) {
   console.log(chalk.magentaBright(`\n=== Current Status ===`));
   console.log(
@@ -23,7 +28,12 @@ export function displayStatus(stage, player, monster) {
   console.log(chalk.magentaBright(`=====================\n`));
 }
 
-// 플레이어 로그
+/**
+ * 플레이어 로그
+ * @param {number} turnCnt
+ * @param {Array} result
+ * @param {Array} logs
+ */
 export function handlePlayerLog(turnCnt, result, logs) {
   logs.push(
     chalk.green(
@@ -32,7 +42,12 @@ export function handlePlayerLog(turnCnt, result, logs) {
   );
 }
 
-// 몬스터 로그
+/**
+ * 몬스터 로그
+ * @param {number} turnCnt
+ * @param {Array} result
+ * @param {Array} logs
+ */
 export function handleMonsterLog(turnCnt, result, logs) {
   logs.push(
     chalk.red(
