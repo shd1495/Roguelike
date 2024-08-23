@@ -3,42 +3,9 @@ import readlineSync from 'readline-sync';
 import { Player } from './player.js';
 import { Monster } from './monster.js';
 import { Item } from './item.js';
-
-function displayStatus(stage, player, monster) {
-  console.log(chalk.magentaBright(`\n=== Current Status ===`));
-  console.log(
-    chalk.cyanBright(`| Stage: ${stage} \n`) +
-      chalk.blueBright(
-        `| player  체력 = ${player.hp} 공격력 = ${player.damage} ~ ${Math.round(player.damage * player.maxDamageMag)}`,
-        ` 방어력 = ${player.defense} 치명타 확률 = ${player.criticalChance}`,
-        ` 최대 공격력 배율 = ${player.maxDamageMag} |`,
-      ) +
-      chalk.redBright(
-        `\n| monster 체력 = ${monster.hp} 공격력 = ${monster.damage} ~ ${Math.round(monster.damage * monster.maxDamageMag)}`,
-        ` 방어력 = ${monster.defense} 치명타 확률 = ${monster.criticalChance}`,
-        ` 최대 공격력 배율 = ${monster.maxDamageMag} |`,
-      ),
-  );
-  console.log(chalk.magentaBright(`=====================\n`));
-}
-
-// 플레이어 로그
-function handlePlayerLog(turnCnt, result, logs) {
-  logs.push(
-    chalk.green(
-      `[${turnCnt}] 몬스터에게 ${result[1] ? '치명타로' : ''} ${result[0]}의 피해를 입혔습니다!`,
-    ),
-  );
-}
-
-// 몬스터 로그
-function handleMonsterLog(turnCnt, result, logs) {
-  logs.push(
-    chalk.red(
-      `[${turnCnt}] 플레이어가 ${result[1] ? '치명타로' : ''} ${result[0]}의 피해를 입었습니다!`,
-    ),
-  );
-}
+import { displayStatus } from './loggers.js';
+import { handlePlayerLog } from './loggers.js';
+import { handleMonsterLog } from './loggers.js';
 
 const battle = async (stage, player, monster) => {
   let logs = [];
@@ -83,12 +50,12 @@ const battle = async (stage, player, monster) => {
 
       case '2':
         // 연속 공격
-        const dafResult = player.doubleAttack(monster);
-        if (dafResult[0]) {
+        const daResult = player.doubleAttack(monster);
+        if (daResult[0]) {
           logs.push(chalk.gray(`[${turnCnt}] 연속 공격에 성공했습니다!`));
           // 공격 2회
-          handlePlayerLog(turnCnt, dafResult[1], logs);
-          handlePlayerLog(turnCnt, dafResult[2], logs);
+          handlePlayerLog(turnCnt, daResult[1], logs);
+          handlePlayerLog(turnCnt, daResult[2], logs);
           // 몬스터 공격
           handleMonsterLog(turnCnt, maResult, logs);
         } else {
@@ -159,16 +126,41 @@ const battle = async (stage, player, monster) => {
         readlineSync.question('게임 클리어를 축하드립니다.');
         return 0;
       }
-      // 턴 카운트
-      turnCnt++;
 
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
-        // 2 ~ 20% 확률로 아이템 드랍
-        if (Math.random() * 100 < 2 * stage) {
+        console.log(chalk.yellow(`[${turnCnt}] 몬스터를 처치했습니다!`));
+        // 아이템 드랍
+        // 5 ~ 50% 확률로 아이템 드랍
+        if (Math.random() * 100 < 5 * stage) {
           const item = Item.dropItem();
           console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
-          item.equipItem(player, item);
+          console.log(
+            chalk.yellow(
+              `${item.name}의 효과 ${Object.keys(item.stat)} + ${Object.values(item.stat)}`,
+            ),
+          );
+          let choice;
+          do {
+            choice = readlineSync.question(
+              ` ${player.item ? '1. 교체한다.' + '2. 교체하지 않는다.' : '1. 장착한다.' + '2. 장착하지 않는다.'} `,
+            );
+
+            switch (choice) {
+              case '1':
+                console.log(chalk.green(`${item.name}을/를 장착했습니다!`));
+                if (player.item) item.unEquipItem(player);
+
+                item.equipItem(player, item);
+                break;
+              case '2':
+                console.log(chalk.red(`${item.name}을/를 포기했습니다.`));
+                break;
+              default:
+                console.log(chalk.red('올바른 선택을 입력해주세요'));
+                break;
+            }
+          } while (choice !== '1' && choice !== '2');
         }
 
         // 클리어 보상
@@ -188,6 +180,8 @@ const battle = async (stage, player, monster) => {
         return alivePlayer;
       }
     }
+    // 턴 카운트
+    turnCnt++;
   }
 };
 
