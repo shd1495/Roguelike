@@ -33,7 +33,34 @@ export class Player {
     this.item = null;
   }
 
-  // 스테이지 클리어 보상
+  /**
+   * 랜덤 보상
+   * @param {object} table
+   * @returns {number}
+   * @author 랜덤 능력치 상승 최소치 ~ 상한치
+   */
+  randomReward(table) {
+    const type = {
+      hp: [20, 50],
+      damage: [1, 10],
+      maxDamageMag: [0.1, 1],
+      counterChance: [3, 10],
+      runChance: [1, 3],
+      doubleAttackChance: [3, 7],
+      defense: [1, 3],
+      criticalChance: [3, 7],
+    };
+
+    const [min, max] = type[table];
+    return Math.round(min + Math.random() * (max - min));
+  }
+
+  /**
+   * 스테이지 클리어 보상
+   * @param {number} stage
+   * @returns {object}
+   * @author 스테이지 클리어 시 기본 능력치 상승 + 랜덤 능력치 (보상 테이블 중 한 개) 상승
+   */
   reward(stage) {
     // 기본 보상
     this.damage += Math.round(stage / 2);
@@ -41,87 +68,58 @@ export class Player {
 
     // 랜덤 추가 보상
     const rewardTable = this.rewardTable[Math.floor(Math.random() * this.rewardTable.length)];
-
-    switch (rewardTable) {
-      // 체력
-      case 'hp':
-        // 20 ~ 50
-        const hp = 20 + Math.round(Math.random() * 30);
-        this.hp += hp;
-        return { type: '체력', amount: hp };
-      // 최소 공격력
-      case 'damage':
-        // 1 ~ 10
-        const damage = 1 + Math.round(Math.random() * 10);
-        this.damage += damage;
-        return { type: '최소 공격력', amount: damage };
-      // 최대 공격력 배율
-      case 'maxDamageMag':
-        // 0.1 ~ 1
-        const maxDamageMag = Math.ceil(Math.random() * 100) / 100;
-        this.maxDamageMag += maxDamageMag;
-        return { type: '최대 공격력 배율', amount: maxDamageMag };
-      // 방어 확률
-      case 'counterChance':
-        // 3 ~ 10
-        const counterChance = 3 + Math.round(Math.random() * 7);
-        this.counterChance += counterChance;
-        return { type: '방어 확률', amount: counterChance };
-      // 도망 확률
-      case 'runChance':
-        // 1 ~ 3
-        const runChance = 1 + Math.round(Math.random() * 2);
-        this.runChance += runChance;
-        return { type: '도망 확률', amount: runChance };
-      // 연속 공격 확률
-      case 'doubleAttackChance':
-        // 3 ~ 7
-        const doubleAttackChance = 3 + Math.round(Math.random() * 4);
-        this.doubleAttackChance += doubleAttackChance;
-        return { type: '연속 공격 확률', amount: doubleAttackChance };
-      // 방어 수치
-      case 'defense':
-        // 1 ~ 3
-        const defense = 1 + Math.round(Math.random() * 2);
-        this.defense += defense;
-        return { type: '방어 수치', amount: defense };
-      // 치명타 확률
-      case 'criticalChance':
-        // 3 ~ 7
-        const criticalChance = 3 + Math.round(Math.random() * 4);
-        this.criticalChance += criticalChance;
-        return { type: '치명타 확률', amount: criticalChance };
-    }
+    const amount = this.randomReward(rewardTable);
+    this[rewardTable] += amount;
+    return { type: rewardTable, amount: amount };
   }
 
-  // 공격력 계산
+  /**
+   * 데미지 계산
+   * @returns {number}
+   * @author damege = 최소 공격력 + 난수 * 공격력 편차(최소공 * 최대공 배율 - 최소공)
+   */
   calculDamage() {
     let damage =
-      // 최소 공격력 + 난수 * 공격력 편차(최소공 * 최대공 배율 - 최소공)
       this.damage + Math.round(Math.random() * (this.damage * this.maxDamageMag - this.damage));
 
     return damage > 0 ? damage : 0;
   }
 
-  // 크리티컬 확률 계산
+  /**
+   * 크리티컬 성공 여부
+   * @returns {number}
+   */
   isCri() {
     return Math.random() * 100 < this.criticalChance;
   }
 
-  // 입은 피해 계산
+  /**
+   * 입은 피해 계산
+   * @param {number} damage
+   * @returns {number}
+   * @author 대미지가 0보다 낮을경우 0 = 최소 피해량
+   */
   takeDamage(damage) {
-    // 대미지가 0보다 낮을경우 0 = 최소 피해량
     const receivedDamage = Math.max(damage - this.defense, 0);
     this.hp -= receivedDamage;
     return receivedDamage;
   }
 
+  /**
+   * 입은 피해 계산
+   * @param {number} amount
+   * @returns {number}
+   */
   heal(amount) {
     this.hp += amount;
     return amount;
   }
 
-  // 공격
+  /**
+   * 공격
+   * @param {object} monster
+   * @returns {Array}
+   */
   attack(monster) {
     let damage = this.calculDamage(monster);
     const isCri = this.isCri();
@@ -134,14 +132,17 @@ export class Player {
     return [damage, isCri];
   }
 
-  // 방어/반격
+  /**
+   * 방어/반격
+   * @param {object} monster
+   * @returns {Array}
+   * @author 60%의 데미지만 반격
+   */
   counter(monster) {
     const roll = Math.random() * 100 < this.counterChance;
-    // 확률 체크
     if (roll) {
       let counter = this.calculDamage(monster, true);
       const isCri = this.isCri();
-      // 60% 데미지만
       counter = Math.round(monster.takeDamage(counter, isCri) * 0.6);
       return [true, counter];
     }
@@ -149,14 +150,17 @@ export class Player {
     return [false, 0];
   }
 
-  // 연속 공격
+  /**
+   * 연속 공격
+   * @param {object} monster
+   * @returns {Array}
+   * @author 공격 메소드 2번 실행
+   */
   doubleAttack(monster) {
     const result = [];
 
-    // 확률 체크
     if (Math.random() * 100 < this.doubleAttackChance) {
       result.push(true);
-      // 공격 2번 실행
       result.push(this.attack(monster));
       result.push(this.attack(monster));
     }
