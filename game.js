@@ -50,12 +50,12 @@ const battle = async (stage, player, monster) => {
 
       case '2':
         // 연속 공격
-        const dafResult = player.doubleAttack(monster);
-        if (dafResult[0]) {
+        const daResult = player.doubleAttack(monster);
+        if (daResult[0]) {
           logs.push(chalk.gray(`[${turnCnt}] 연속 공격에 성공했습니다!`));
           // 공격 2회
-          handlePlayerLog(turnCnt, dafResult[1], logs);
-          handlePlayerLog(turnCnt, dafResult[2], logs);
+          handlePlayerLog(turnCnt, daResult[1], logs);
+          handlePlayerLog(turnCnt, daResult[2], logs);
           // 몬스터 공격
           handleMonsterLog(turnCnt, maResult, logs);
         } else {
@@ -132,8 +132,8 @@ const battle = async (stage, player, monster) => {
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
         // 아이템 드랍
-        // 2 ~ 20% 확률로 아이템 드랍
-        if (Math.random() * 100 < 2 * stage) {
+        // 5 ~ 50% 확률로 아이템 드랍
+        if (Math.random() * 100 < 5 * stage) {
           const item = Item.dropItem();
           console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
           console.log(

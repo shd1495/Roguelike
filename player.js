@@ -108,7 +108,7 @@ export class Player {
   /**
    * 입은 피해 계산
    * @param {number} amount
-   * @returns
+   * @returns {number}
    */
   heal(amount) {
     this.hp += amount;
