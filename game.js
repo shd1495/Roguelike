@@ -6,6 +6,7 @@ import { Item } from './item.js';
 import { displayStatus } from './loggers.js';
 import { handlePlayerLog } from './loggers.js';
 import { handleMonsterLog } from './loggers.js';
+import { start } from './server.js';
 
 const battle = async (stage, player, monster) => {
   let logs = [];
@@ -125,7 +126,7 @@ const battle = async (stage, player, monster) => {
 
         displayStatus(stage, player, monster);
 
-        readlineSync.question('게임 클리어를 축하드립니다.');
+        readlineSync.question(chalk.blue('[ 게임 클리어를 축하드립니다. ]'));
         return 0;
       }
 
@@ -171,13 +172,14 @@ const battle = async (stage, player, monster) => {
         console.log(
           chalk.green(`클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`),
         );
-        readlineSync.question('스테이지 클리어! 아무키나 입력해주세요');
+        readlineSync.question('[ 스테이지 클리어! 아무키나 입력해주세요 ]');
         // 몬스터 처치
         aliveMonster = 0;
         return aliveMonster;
         // 게임 오버
       } else {
-        readlineSync.question('체력을 모두 소진했습니다. GAME OVER');
+        console.log(chalk.gray('[ 체력을 모두 소진했습니다. GAME OVER ]'));
+        readlineSync.question('[ 로비로 이동합니다. ]');
         // 플레이어 사망
         alivePlayer = false;
         return alivePlayer;
@@ -200,8 +202,9 @@ export async function startGame() {
     const clear = await battle(stage, player, monster, result, increase);
 
     // 스테이지 클리어 및 게임 종료 조건
-    // 게임 종료 (플레이어 사망)
+    // 로비로 다시 이동
     if (clear === false) {
+      start();
       break;
     }
     // 몬스터 hp가 0 이하가 되면 스테이지 클리어

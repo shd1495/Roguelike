@@ -3,7 +3,7 @@ export class Monster {
     // 체력
     this.hp = 15 * stage + Math.round(Math.random() * 12 * stage);
     // 최소 공격력
-    this.damage = stage + Math.round(Math.random() * 4 * stage);
+    this.damage = stage + Math.round(Math.random() * 2 * stage);
     // 최대 공격력 배율
     this.maxDamageMag = 1 + Math.round(Math.random() * 2);
     // 방어 수치
