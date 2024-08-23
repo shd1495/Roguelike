@@ -52,6 +52,9 @@ export class Player {
     };
 
     const [min, max] = type[table];
+    if (table == 'maxDamageMag') {
+      return (min + Math.random() * (max - min)).toFixed(2);
+    }
     return Math.round(min + Math.random() * (max - min));
   }
 

@@ -12,6 +12,7 @@ const battle = async (stage, player, monster) => {
   let turnCnt = 1;
   let aliveMonster = 1;
   let alivePlayer = true;
+  let isRun = false;
 
   // 스테이지 클리어 체력 회복
   if (stage > 1) {
@@ -89,6 +90,7 @@ const battle = async (stage, player, monster) => {
           player.heal(maResult[0]);
           logs.push(chalk.green(`[${turnCnt}] 도망에 성공했습니다!`));
           monster.hp = 0;
+          isRun = true;
           break;
         } else {
           logs.push(chalk.yellow(`[${turnCnt}] 도망에 실패했습니다!`));
@@ -129,7 +131,8 @@ const battle = async (stage, player, monster) => {
 
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
-        console.log(chalk.yellow(`[${turnCnt}] 몬스터를 처치했습니다!`));
+        if (!isRun) console.log(chalk.yellow(`[${turnCnt}] 몬스터를 처치했습니다!`));
+
         // 아이템 드랍
         // 5 ~ 50% 확률로 아이템 드랍
         if (Math.random() * 100 < 5 * stage) {
