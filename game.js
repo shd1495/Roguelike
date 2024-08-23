@@ -102,7 +102,7 @@ const battle = async (stage, player, monster) => {
       case '5':
         // 회복
         const healAmount = player.heal(1 + Math.floor(Math.random() * (5 * stage)));
-        logs.push(chalk.yellow(`[${turnCnt}] ${healAmount}만큼 회복에 성공했습니다!`));
+        logs.push(chalk.gray(`[${turnCnt}] ${healAmount}만큼 회복에 성공했습니다!`));
         // 몬스터 공격
         handleMonsterLog(turnCnt, maResult, logs);
         break;
