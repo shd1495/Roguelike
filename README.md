@@ -16,7 +16,6 @@
 
 ![도망](https://github.com/user-attachments/assets/0fddec2a-334d-4b8f-bfe4-e53fc6f7130d)
 
----
 #### 2. 플레이어 클래스에서 플레이어 스탯 관리
 ```js
 export class Player {
@@ -56,20 +55,16 @@ export class Player {
 }
 ```
 
----
 #### 3. 간단한 전투 로직 구현 - 공격, 피격
 ![공격](https://github.com/user-attachments/assets/aa129561-79b3-45da-942d-1e380be40ea8)
 
----
 #### 4. 스테이지 클리어 시 유저 체력 회복
 ![클리어 회복](https://github.com/user-attachments/assets/91bdbdab-f6b6-47c4-b150-be3e2439bb00)
 
----
 #### 5. 스테이지 진행과 비례해서 몬스터의 체력과 공격력 증가 시키기
 ![1스테](https://github.com/user-attachments/assets/c3d315d8-ef09-4f35-baa3-b386418d8cd5)
 ![2스테](https://github.com/user-attachments/assets/f90ca3fe-0b5a-4df1-880a-d36db5413494)
 
----
 ### 도전 기능
 
 #### 1. 확률 로직 적용
