@@ -170,7 +170,10 @@ const battle = async (stage, player, monster) => {
         // 클리어 보상
         const reward = await player.reward(stage);
         console.log(
-          chalk.green(`클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`),
+          chalk.green(
+            `클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`,
+            `현재 ${reward.type} = ${player[reward.type]}`,
+          ),
         );
         readlineSync.question('[ 스테이지 클리어! 아무키나 입력해주세요 ]');
         // 몬스터 처치

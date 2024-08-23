@@ -10,28 +10,26 @@ export class Item {
    */
   static dropItemName(stat) {
     let name = [];
+    /**
+     * 아이템 품질 결정
+     * @param {number} amount
+     * @param {Array} quality
+     * @returns {Array}
+     */
+    function quality(amount, quality) {
+      if (amount < quality[0]) return '녹슨';
+      if (amount < quality[1]) return '평범한';
+      return '전설적인';
+    }
+
+    if (stat.damage) name.push(quality(stat.damage, [3, 8]));
+    if (stat.defense) name.push(quality(stat.damage, [3, 8]));
+    if (stat.criticalChance) name.push(quality(stat.criticalChance, [15, 30]));
+
     const type = Math.floor(Math.random() * 3);
+    const weapon = ['도끼', '검', '창'];
+    name.push(weapon[type]);
 
-    if (stat.damage) {
-      if (stat.damage < 3) name.push('녹슨');
-      else if (stat.damage < 8) name.push('평범한');
-      else name.push('전설적인');
-    }
-
-    if (stat.defense) {
-      if (stat.defense < 3) name.push('녹슨');
-      else if (stat.defense < 8) name.push('평범한');
-      else name.push('전설적인');
-    }
-    if (stat.criticalChance) {
-      if (stat.criticalChance < 15) name.push('녹슨');
-      else if (stat.criticalChance < 30) name.push('평범한');
-      else name.push('전설적인');
-    }
-
-    if (type === 0) name.push('도끼');
-    if (type === 1) name.push('검');
-    if (type === 2) name.push('창');
     return name;
   }
 
