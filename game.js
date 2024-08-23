@@ -133,7 +133,7 @@ const battle = async (stage, player, monster) => {
       if (monster.hp <= 0 && player.hp > 0) {
         // 아이템 드랍
         // 2 ~ 20% 확률로 아이템 드랍
-        if (Math.random() * 100 < 100) {
+        if (Math.random() * 100 < 2 * stage) {
           const item = Item.dropItem();
           console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
           console.log(
