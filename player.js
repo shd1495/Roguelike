@@ -3,13 +3,13 @@ export class Player {
     // 체력
     this.hp = 50 + Math.round(Math.random() * 50);
     // 최소 공격력
-    this.damage = 100 + Math.round(Math.random() * 5);
+    this.damage = 1 + Math.round(Math.random() * 5);
     // 최대 공격력 배율
     this.maxDamageMag = 1 + Math.round(Math.random() * 2);
     // 방어 확률
     this.counterChance = 55;
     // 도망 확률
-    this.runChance = 5;
+    this.runChance = 20;
     // 연속 공격 확률
     this.doubleAttackChance = 33;
     // 방어 수치

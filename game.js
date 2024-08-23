@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import figlet from 'figlet';
 import readlineSync from 'readline-sync';
 import { Player } from './player.js';
 import { Monster } from './monster.js';
@@ -7,6 +6,8 @@ import { Item } from './item.js';
 import { displayStatus } from './loggers.js';
 import { handlePlayerLog } from './loggers.js';
 import { handleMonsterLog } from './loggers.js';
+import { displayClear } from './loggers.js';
+import { dropItemLog } from './loggers.js';
 import { start } from './server.js';
 
 const battle = async (stage, player, monster) => {
@@ -91,7 +92,6 @@ const battle = async (stage, player, monster) => {
         if (player.run()) {
           player.heal(maResult[0]);
           logs.push(chalk.green(`[${turnCnt}] 도망에 성공했습니다!`));
-          monster.hp = 0;
           isRun = true;
           break;
         } else {
@@ -114,7 +114,7 @@ const battle = async (stage, player, monster) => {
     }
 
     // 스테이지 클리어 조건 및 게임 종료 조건
-    if (monster.hp <= 0 || player.hp <= 0) {
+    if (monster.hp <= 0 || player.hp <= 0 || isRun) {
       console.clear();
 
       displayStatus(stage, player, monster);
@@ -123,28 +123,17 @@ const battle = async (stage, player, monster) => {
 
       //게임 클리어
       if (stage == 10) {
-        console.clear();
-        console.log(
-          chalk.cyan(
-            figlet.textSync('Game Clear\n', {
-              font: 'Standard',
-              horizontalLayout: 'default',
-              verticalLayout: 'default',
-            }),
-          ),
-        );
-
-        readlineSync.question(chalk.blue('[ 게임 클리어를 축하드립니다. ]'));
+        displayClear();
         return 0;
       }
 
       // 스테이지 클리어
-      if (monster.hp <= 0 && player.hp > 0) {
+      if ((monster.hp <= 0 && player.hp > 0) || isRun) {
         if (!isRun) console.log(chalk.yellow(`[${turnCnt}] 몬스터를 처치했습니다!`));
 
         // 아이템 드랍
         // 5 ~ 50% 확률로 아이템 드랍
-        if (Math.random() * 100 < 5 * stage) {
+        if (Math.random() * 100 < 5 * stage && !isRun) {
           const item = Item.dropItem();
           console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
           console.log(
@@ -157,38 +146,28 @@ const battle = async (stage, player, monster) => {
             choice = readlineSync.question(
               ` ${player.item ? '1. 교체한다.' + '2. 교체하지 않는다.' : '1. 장착한다.' + '2. 장착하지 않는다.'} `,
             );
-
-            switch (choice) {
-              case '1':
-                console.log(chalk.green(`${item.name}을/를 장착했습니다!`));
-                if (player.item) item.unEquipItem(player);
-
-                item.equipItem(player, item);
-                break;
-              case '2':
-                console.log(chalk.red(`${item.name}을/를 포기했습니다.`));
-                break;
-              default:
-                console.log(chalk.red('올바른 선택을 입력해주세요'));
-                break;
-            }
+            dropItemLog(choice, player, item);
           } while (choice !== '1' && choice !== '2');
         }
 
         // 클리어 보상
-        const reward = await player.reward(stage);
-        console.log(
-          chalk.green(
-            `클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`,
-            `현재 ${reward.type} = ${player[reward.type]}`,
-          ),
-        );
+        if (!isRun) {
+          const reward = await player.reward(stage);
+          console.log(
+            chalk.green(
+              `클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`,
+              `현재 ${reward.type} = ${player[reward.type]}`,
+            ),
+          );
+        } else {
+          console.log(chalk.red(`[ 도망친 곳에 낙원은 없습니다. ]`));
+        }
         readlineSync.question('[ 스테이지 클리어! 아무키나 입력해주세요 ]');
         // 몬스터 처치
         aliveMonster = 0;
         return aliveMonster;
         // 게임 오버
-      } else {
+      } else if (!isRun) {
         console.log(chalk.gray('[ 체력을 모두 소진했습니다. GAME OVER ]'));
         readlineSync.question('[ 로비로 이동합니다. ]');
         // 플레이어 사망
