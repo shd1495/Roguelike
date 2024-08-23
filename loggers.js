@@ -1,4 +1,6 @@
 import chalk from 'chalk';
+import figlet from 'figlet';
+import readlineSync from 'readline-sync';
 
 /**
  * 현재 상태 창
@@ -54,4 +56,51 @@ export function handleMonsterLog(turnCnt, result, logs) {
       `[${turnCnt}] 플레이어가 ${result[1] ? '치명타로' : ''} ${result[0]}의 피해를 입었습니다!`,
     ),
   );
+}
+
+/**
+ * 게임 클리어 문구
+ * @returns {number}
+ */
+export function displayClear() {
+  console.clear();
+  console.log(chalk.magentaBright(`========================================================\n`));
+  console.log(
+    chalk.cyan(
+      figlet.textSync('Game Clear\n', {
+        font: 'Standard',
+        horizontalLayout: 'default',
+        verticalLayout: 'default',
+      }),
+    ),
+  );
+  console.log(chalk.magentaBright(`========================================================\n`));
+
+  readlineSync.question(chalk.blue('[ 게임 클리어를 축하드립니다. ]'));
+  return 0;
+}
+
+/**
+ * 드랍된 아이템 로그
+ * @param {string} choice
+ * @param {object} player
+ * @param {object} item
+ * @returns {string}
+ */
+export function dropItemLog(choice, player, item) {
+  switch (choice) {
+    case '1':
+      console.log(chalk.green(`${item.name}을/를 장착했습니다!`));
+      if (player.item) item.unEquipItem(player);
+
+      item.equipItem(player, item);
+      break;
+    case '2':
+      console.log(chalk.red(`${item.name}을/를 포기했습니다.`));
+      break;
+    default:
+      console.log(chalk.red('올바른 선택을 입력해주세요'));
+      break;
+  }
+  return choice;
 }

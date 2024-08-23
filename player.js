@@ -9,7 +9,7 @@ export class Player {
     // 방어 확률
     this.counterChance = 55;
     // 도망 확률
-    this.runChance = 5;
+    this.runChance = 20;
     // 연속 공격 확률
     this.doubleAttackChance = 33;
     // 방어 수치
