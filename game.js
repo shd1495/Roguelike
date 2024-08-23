@@ -136,7 +136,32 @@ const battle = async (stage, player, monster) => {
         if (Math.random() * 100 < 100) {
           const item = Item.dropItem();
           console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
-          item.equipItem(player, item);
+          console.log(
+            chalk.yellow(
+              `${item.name}의 효과 ${Object.keys(item.stat)} + ${Object.values(item.stat)}`,
+            ),
+          );
+          let choice;
+          do {
+            choice = readlineSync.question(
+              `1. ${player.item ? '교체한다' : '장착한다'}. 2. 장착하지 않는다.`,
+            );
+
+            switch (choice) {
+              case '1':
+                console.log(chalk.green(`${item.name}을/를 장착했습니다!`));
+                if (player.item) item.unEquipItem(player);
+
+                item.equipItem(player, item);
+                break;
+              case '2':
+                console.log(chalk.red(`${item.name}을/를 포기했습니다.`));
+                break;
+              default:
+                console.log(chalk.red('올바른 선택을 입력해주세요'));
+                break;
+            }
+          } while (choice !== '1' && choice !== '2');
         }
 
         // 클리어 보상

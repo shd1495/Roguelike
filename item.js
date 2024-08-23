@@ -23,7 +23,21 @@ export class Item {
   equipItem(player, item) {
     player.item = item;
     if (item.stat.damage) player.damage += item.stat.damage;
+
     if (item.stat.defense) player.defense += item.stat.defense;
+
     if (item.stat.criticalChance) player.criticalChance += item.stat.criticalChance;
+  }
+
+  // 아이템 교체 메소드
+  unEquipItem(player) {
+    const item = player.item;
+    if (item.stat.damage) player.damage -= player.item.stat.damage;
+
+    if (item.stat.defense) player.defense -= player.item.stat.defense;
+
+    if (item.stat.criticalChance) player.criticalChance -= player.item.stat.criticalChance;
+
+    player.item = null;
   }
 }
