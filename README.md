@@ -80,6 +80,7 @@ export class Player {
 ![방어](https://github.com/user-attachments/assets/31f6698c-0c9a-4251-9eb3-aba4c203e9f1)
 ![도망 및 회복](https://github.com/user-attachments/assets/6350e1cb-2ae3-4660-abab-a2acb201bae6)
 
+---
 ### 추가 기능
 
 #### 1. 스테이지 클리어 시 랜덤 보상
