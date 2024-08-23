@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import figlet from 'figlet';
 import readlineSync from 'readline-sync';
 import { Player } from './player.js';
 import { Monster } from './monster.js';
@@ -123,8 +124,15 @@ const battle = async (stage, player, monster) => {
       //게임 클리어
       if (stage == 10) {
         console.clear();
-
-        displayStatus(stage, player, monster);
+        console.log(
+          chalk.cyan(
+            figlet.textSync('Game Clear\n', {
+              font: 'Standard',
+              horizontalLayout: 'default',
+              verticalLayout: 'default',
+            }),
+          ),
+        );
 
         readlineSync.question(chalk.blue('[ 게임 클리어를 축하드립니다. ]'));
         return 0;
