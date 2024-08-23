@@ -75,17 +75,24 @@ export class Player {
 #### 1. 확률 로직 적용
 ![확률](https://github.com/user-attachments/assets/c01711d1-9883-4240-b2d9-38e3cc0c01e2)
 
-#### 2. 스테이지 클리어 시 랜덤 보상
+#### 2. 복잡한 행동 패턴 구현
+![연속공격](https://github.com/user-attachments/assets/8b308661-d6f4-403d-aa5a-4b4012d9dadc)
+![방어](https://github.com/user-attachments/assets/31f6698c-0c9a-4251-9eb3-aba4c203e9f1)
+![도망 및 회복](https://github.com/user-attachments/assets/6350e1cb-2ae3-4660-abab-a2acb201bae6)
+
+### 추가 기능
+
+#### 1. 스테이지 클리어 시 랜덤 보상
 ![클리어 보상](https://github.com/user-attachments/assets/d4bcb366-127a-4df8-a5ab-f33eb92b1ce1)
 
 
-#### 3. 크리티컬 기능
+#### 2. 크리티컬 기능
 ![크리티컬](https://github.com/user-attachments/assets/a4918519-62a6-4c72-a340-eeca9a72f9f8)
 
-#### 4. 회복 기능
+#### 3. 회복 기능
 ![회복기능](https://github.com/user-attachments/assets/bc60c20f-9b3a-400e-b663-2980cd6d2f67)
 
-#### 5. 아이템 기능
+#### 4. 아이템 기능
 ![아이템 장착](https://github.com/user-attachments/assets/be530cb3-bdfa-46bb-b641-cafac2a4de3d)
 ![아이템 포기](https://github.com/user-attachments/assets/b5f8dc27-e839-49e2-8e18-bd1aabd644a4)
 ![아이템 로그](https://github.com/user-attachments/assets/9bcb883f-862b-4c88-acf6-a724865c593b)
