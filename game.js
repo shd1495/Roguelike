@@ -126,11 +126,10 @@ const battle = async (stage, player, monster) => {
         readlineSync.question('게임 클리어를 축하드립니다.');
         return 0;
       }
-      // 턴 카운트
-      turnCnt++;
 
       // 스테이지 클리어
       if (monster.hp <= 0 && player.hp > 0) {
+        console.log(chalk.yellow(`[${turnCnt}] 몬스터를 처치했습니다!`));
         // 아이템 드랍
         // 5 ~ 50% 확률로 아이템 드랍
         if (Math.random() * 100 < 5 * stage) {
@@ -181,6 +180,8 @@ const battle = async (stage, player, monster) => {
         return alivePlayer;
       }
     }
+    // 턴 카운트
+    turnCnt++;
   }
 };
 
