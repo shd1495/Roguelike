@@ -73,7 +73,20 @@ export class Player {
     const rewardTable = this.rewardTable[Math.floor(Math.random() * this.rewardTable.length)];
     const amount = this.randomReward(rewardTable);
     this[rewardTable] += amount;
-    return { type: rewardTable, amount: amount };
+    let type = '';
+
+    const rewardTypes = {
+      'hp': '체력',
+      'damage': '최소 공격력',
+      'maxDamageMag': '최대 대미지 배율',
+      'counterChance': '방어 확률',
+      'runChance': '도망 확률',
+      'doubleAttackChance': '연속 공격 확률',
+      'defense': '방어력',
+      'criticalChance': '치명타 확률',
+    }
+
+    return { type: rewardTypes[rewardTable], amount: amount };
   }
 
   /**
