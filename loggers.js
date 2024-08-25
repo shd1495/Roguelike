@@ -1,16 +1,7 @@
 import chalk from 'chalk';
 import figlet from 'figlet';
 import readlineSync from 'readline-sync';
-/**
- * 아이템 능력치 이름
- * @param {object} player 
- * @returns {string}
- */
-function whatIsKey(player) {
-  if (Object.keys(player.item.stat) == 'damage') return '최소 공격력';
-  if (Object.keys(player.item.stat) == 'defense') return '방어력';
-  if (Object.keys(player.item.stat) == 'criticalChance') return '치명타 확률';
-}
+import { itemTranslate } from './item.js';
 
 /**
  * 현재 상태 창
@@ -23,7 +14,7 @@ export function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(
       `| Stage: ${stage} | ${player.item ? player.item.name + ` =` : ''}`,
-      `${player.item ? whatIsKey(player) + ` +` : ''}`,
+      `${player.item ? itemTranslate(player) + ` +` : ''}`,
       `${player.item ? Object.values(player.item.stat) : ''} \n`,
     ) +
       chalk.blueBright(

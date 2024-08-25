@@ -3,6 +3,7 @@ import readlineSync from 'readline-sync';
 import { Player } from './player.js';
 import { Monster } from './monster.js';
 import { Item } from './item.js';
+import { itemTranslate } from './item.js';
 import { displayStatus } from './loggers.js';
 import { handlePlayerLog } from './loggers.js';
 import { handleMonsterLog } from './loggers.js';
@@ -138,7 +139,7 @@ const battle = async (stage, player, monster) => {
           console.log(chalk.yellow(`몬스터가 ${item.name}을/를 드랍했습니다!`));
           console.log(
             chalk.yellow(
-              `${item.name}의 효과 ${Object.keys(item.stat)} + ${Object.values(item.stat)}`,
+              `${item.name}의 효과 ${itemTranslate(item)} + ${Object.values(item.stat)}`,
             ),
           );
           let choice;
@@ -155,8 +156,8 @@ const battle = async (stage, player, monster) => {
           const reward = await player.reward(stage);
           console.log(
             chalk.green(
-              `클리어 보상으로 ${reward.type}이/가 ${reward.amount} 상승했습니다.`,
-              `현재 ${reward.type} = ${player[reward.type]}`,
+              `클리어 보상으로 ${reward.kType}이/가 ${reward.amount} 상승했습니다.`,
+              `현재 ${reward.kType} = ${player[reward.type].toFixed(2)}`,
             ),
           );
         } else {

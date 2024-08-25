@@ -53,7 +53,7 @@ export class Player {
 
     const [min, max] = type[table];
     if (table == 'maxDamageMag') {
-      return parseFloat((min + Math.random() * (max - min)).toFixed(2));
+      return Math.round((min + Math.random() * (max - min)) * 100) / 100;
     }
     return Math.round(min + Math.random() * (max - min));
   }
@@ -73,20 +73,19 @@ export class Player {
     const rewardTable = this.rewardTable[Math.floor(Math.random() * this.rewardTable.length)];
     const amount = this.randomReward(rewardTable);
     this[rewardTable] += amount;
-    let type = '';
 
     const rewardTypes = {
-      'hp': '체력',
-      'damage': '최소 공격력',
-      'maxDamageMag': '최대 대미지 배율',
-      'counterChance': '방어 확률',
-      'runChance': '도망 확률',
-      'doubleAttackChance': '연속 공격 확률',
-      'defense': '방어력',
-      'criticalChance': '치명타 확률',
-    }
+      hp: '체력',
+      damage: '최소 공격력',
+      maxDamageMag: '최대 대미지 배율',
+      counterChance: '방어 확률',
+      runChance: '도망 확률',
+      doubleAttackChance: '연속 공격 확률',
+      defense: '방어력',
+      criticalChance: '치명타 확률',
+    };
 
-    return { type: rewardTypes[rewardTable], amount: amount };
+    return { type: rewardTable, amount: amount, kType: rewardTypes[rewardTable] };
   }
 
   /**
