@@ -23,7 +23,7 @@ export class Item {
     }
 
     if (stat.damage) name.push(quality(stat.damage, [3, 8]));
-    if (stat.defense) name.push(quality(stat.damage, [3, 8]));
+    if (stat.defense) name.push(quality(stat.defense, [3, 8]));
     if (stat.criticalChance) name.push(quality(stat.criticalChance, [15, 30]));
 
     const type = Math.floor(Math.random() * 3);
