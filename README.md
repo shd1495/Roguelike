@@ -68,27 +68,96 @@ export class Player {
 ### 도전 기능
 
 #### 1. 확률 로직 적용
-![확률](https://github.com/user-attachments/assets/c01711d1-9883-4240-b2d9-38e3cc0c01e2)
+![행동](https://github.com/user-attachments/assets/d6f74a5f-52e3-492e-8169-17e627f33294)
+
+공격 - 최소 ~ 최대 공격력 사이의 랜덤 데미지
+
+방어 - 기본 55% 확률로 방어
+
+연속 공격 - 기본 33% 확률로 공격 2번 사용
+
+도망 - 기본 20% 확률로 도망
+
+회복 - 1 ~ 5 * stage 사이의 양만큼  회복
 
 #### 2. 복잡한 행동 패턴 구현
 ![연속공격](https://github.com/user-attachments/assets/8b308661-d6f4-403d-aa5a-4b4012d9dadc)
+
+연속 공격 - 성공 시 2번 연속으로 공격 시전
+
 ![방어](https://github.com/user-attachments/assets/31f6698c-0c9a-4251-9eb3-aba4c203e9f1)
+
+방어 - 적의 공격을 방어. 성공 시 피해를 무효로하고 60%의 데미지로 반격
+
 ![도망 및 회복](https://github.com/user-attachments/assets/6350e1cb-2ae3-4660-abab-a2acb201bae6)
+
+도망 - 20% 확률로 다음 스테이지로 이동. 보상 및 아이템 획득x
+
+회복 - 1 ~ stage * 5 만큼 회복
 
 ---
 ### 추가 기능
 
 #### 1. 스테이지 클리어 시 랜덤 보상
-![클리어 보상](https://github.com/user-attachments/assets/d4bcb366-127a-4df8-a5ab-f33eb92b1ce1)
+![보상](https://github.com/user-attachments/assets/b9e0ef7e-122d-4b34-ae92-4b5d624b1f36)
 
+- 체력 - 20 ~ 50
+
+- 최소 공격력 - 1 ~ 10
+
+- 최대 공격력 배율 - 0.1 ~ 1
+
+- 방어 확률 - 3 ~ 10
+
+- 도망 확률 - 5 ~ 10
+
+- 연속 공격 확률 - 3 ~ 7
+
+- 방어력 - 1 ~ 3
+
+- 치명타 확률 - 3 ~ 7
+
+중 랜덤하게 획득
+
+5 * stage 확률로 아이템 획득
+장착 및 교체 가능
 
 #### 2. 크리티컬 기능
 ![크리티컬](https://github.com/user-attachments/assets/a4918519-62a6-4c72-a340-eeca9a72f9f8)
 
+치명타 - 기본 10% 확률
+치명타 배율 - 기본 2배
+
 #### 3. 회복 기능
 ![회복기능](https://github.com/user-attachments/assets/bc60c20f-9b3a-400e-b663-2980cd6d2f67)
 
+회복 - 1 ~ stage * 5 만큼 회복
+
 #### 4. 아이템 기능
-![아이템 장착](https://github.com/user-attachments/assets/be530cb3-bdfa-46bb-b641-cafac2a4de3d)
-![아이템 포기](https://github.com/user-attachments/assets/b5f8dc27-e839-49e2-8e18-bd1aabd644a4)
-![아이템 로그](https://github.com/user-attachments/assets/9bcb883f-862b-4c88-acf6-a724865c593b)
+
+![드랍](https://github.com/user-attachments/assets/7a9a6c47-425c-4de3-9c5f-40c2586b60d7)
+
+5 * stage 확률로 아이템 드랍
+
+아이템 능력치
+
+- 최소 공격력 - 1 ~ 10   녹슨 < 3 | 평범한 < 8 | 8 >= 전설적인
+
+- 방어력 - 1 ~ 10   녹슨 < 3 | 평범한 < 8 | 8 >= 전설적인 
+
+- 치명타 확률 - 1 ~ 40   녹슨 < 15 | 평범한 < 30 | 30 >= 전설적인 
+
+
+종류 
+
+도끼 | 검 | 창
+
+![교체](https://github.com/user-attachments/assets/7e382e44-bcb0-4e1e-acdb-642f6d363cc7)
+
+기존 장착한 아이템의 효과가 더 마음에 들 경우 획득한 아이템을 포기 가능
+
+![상태창](https://github.com/user-attachments/assets/5a2a88c1-71ee-4491-a9f2-f126717c1993)
+
+아이템의 이름과 적용되는 효과를 확인 가능
+
+
