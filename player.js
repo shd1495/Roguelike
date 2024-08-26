@@ -45,7 +45,7 @@ export class Player {
       damage: [1, 10],
       maxDamageMag: [0.1, 1],
       counterChance: [3, 10],
-      runChance: [1, 3],
+      runChance: [5, 10],
       doubleAttackChance: [3, 7],
       defense: [1, 3],
       criticalChance: [3, 7],
