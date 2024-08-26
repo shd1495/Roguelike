@@ -23,7 +23,7 @@ export class Item {
     }
 
     if (stat.damage) name.push(quality(stat.damage, [3, 8]));
-    if (stat.defense) name.push(quality(stat.damage, [3, 8]));
+    if (stat.defense) name.push(quality(stat.defense, [3, 8]));
     if (stat.criticalChance) name.push(quality(stat.criticalChance, [15, 30]));
 
     const type = Math.floor(Math.random() * 3);
@@ -54,7 +54,7 @@ export class Item {
   }
 
   /**
-   * 아이템 장착 메소드
+   * 아이템 장착
    * @param {object} player
    * @param {object} item
    */
@@ -68,7 +68,7 @@ export class Item {
   }
 
   /**
-   * 아이템 교체 메소드
+   * 아이템 교체
    * @param {object} player
    */
   unEquipItem(player) {
@@ -81,4 +81,20 @@ export class Item {
 
     player.item = null;
   }
+}
+
+/**
+ * 아이템 능력치 한글 변환
+ * @param {object} player
+ * @returns {string}
+ */
+export function itemTranslate(object) {
+  let key;
+
+  if (object.item && object.item.stat) key = Object.keys(object.item.stat);
+  else if (object.stat) key = Object.keys(object.stat);
+
+  if (key == 'damage') return '최소 공격력';
+  if (key == 'defense') return '방어력';
+  if (key == 'criticalChance') return '치명타 확률';
 }

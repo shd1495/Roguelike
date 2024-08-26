@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import figlet from 'figlet';
 import readlineSync from 'readline-sync';
+import { itemTranslate } from './item.js';
 
 /**
  * 현재 상태 창
@@ -13,7 +14,7 @@ export function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(
       `| Stage: ${stage} | ${player.item ? player.item.name + ` =` : ''}`,
-      `${player.item ? Object.keys(player.item.stat) + ` +` : ''}`,
+      `${player.item ? itemTranslate(player) + ` +` : ''}`,
       `${player.item ? Object.values(player.item.stat) : ''} \n`,
     ) +
       chalk.blueBright(
