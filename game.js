@@ -2,8 +2,7 @@ import chalk from 'chalk';
 import readlineSync from 'readline-sync';
 import { Player } from './src/class/player.js';
 import { Monster } from './src/class/monster.js';
-import { Item } from './src/class/item.js';
-import { itemTranslate } from './src/class/item.js';
+import { Item, itemTranslate } from './src/class/item.js';
 import {
   displayStatus,
   handlePlayerLog,
