@@ -10,7 +10,7 @@ import {
   displayClear,
   dropItemLog,
 } from './src/utils/loggers.js';
-import { start } from './server.js';
+import { start } from './src/server/server.js';
 
 const battle = async (stage, player, monster) => {
   let logs = [];
