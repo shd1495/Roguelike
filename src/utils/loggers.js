@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import figlet from 'figlet';
 import readlineSync from 'readline-sync';
-import { itemTranslate } from './item.js';
+import { itemTranslate } from '../class/item.js';
 
 /**
  * 현재 상태 창

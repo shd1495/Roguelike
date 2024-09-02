@@ -1,14 +1,16 @@
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
-import { Player } from './player.js';
-import { Monster } from './monster.js';
-import { Item } from './item.js';
-import { itemTranslate } from './item.js';
-import { displayStatus } from './loggers.js';
-import { handlePlayerLog } from './loggers.js';
-import { handleMonsterLog } from './loggers.js';
-import { displayClear } from './loggers.js';
-import { dropItemLog } from './loggers.js';
+import { Player } from './src/class/player.js';
+import { Monster } from './src/class/monster.js';
+import { Item } from './src/class/item.js';
+import { itemTranslate } from './src/class/item.js';
+import {
+  displayStatus,
+  handlePlayerLog,
+  handleMonsterLog,
+  displayClear,
+  dropItemLog,
+} from './src/utils/loggers.js';
 import { start } from './server.js';
 
 const battle = async (stage, player, monster) => {
